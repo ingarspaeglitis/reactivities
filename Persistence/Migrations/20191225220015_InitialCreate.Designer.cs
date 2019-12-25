@@ -8,14 +8,14 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20191113201806_InitialCreate")]
+    [Migration("20191225220015_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.0.0");
+                .HasAnnotation("ProductVersion", "3.1.0");
 
             modelBuilder.Entity("Domain.Value", b =>
                 {

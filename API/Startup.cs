@@ -1,4 +1,3 @@
-using API.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -45,17 +44,22 @@ namespace API
 
             //app.UseHttpsRedirection();
 
-            app.EnsureMigrations();
-
-            app.UseCors("CorsPolicy");
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseCors("CorsPolicy");
+
+            app.UseAuthentication();
+            app.UseAuthorization();     
             
-            app.UseAuthorization();            
+            // signalR goes here
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                // endpoints.MapHub<ChatHub>("/chat");
+                // endpoints.MapFallbackToController("Index", "Fallback");
             });
         }
     }
