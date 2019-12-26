@@ -13,7 +13,7 @@ namespace Application.Activities
             public Guid Id { get; set; }
         }
 
-        public class Handler : IRequestHandler<Create.Command>
+        public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
 
@@ -22,7 +22,7 @@ namespace Application.Activities
                 _context = context;
             }
 
-            public async Task<Unit> Handle(Create.Command request, CancellationToken cancellationToken)
+            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var activity = await _context.Activities.FindAsync(request.Id);
 
@@ -31,7 +31,7 @@ namespace Application.Activities
                     throw new Exception("Could not find activity");
                 }
 
-                _context.Remove(activity);
+                _context.Activities.Remove(activity);
                 var success = await _context.SaveChangesAsync(cancellationToken) > 0;
 
                 if (success)
