@@ -10,7 +10,7 @@ const ActivityForm: React.FC = () => {
 
     const activityStore = useContext(ActivityStore);
 
-    const { createActivity, editActivity, submitting, cancelFormOpen, selectedActivity: initialFormState  } = activityStore;
+    const { createActivity, editActivity, submitting, cancelFormOpen, activity: initialFormState  } = activityStore;
 
     const initializeForm = () => {
         if (initialFormState) {
