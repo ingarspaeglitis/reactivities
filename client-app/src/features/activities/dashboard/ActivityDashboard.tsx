@@ -3,7 +3,7 @@ import { Grid } from 'semantic-ui-react';
 import  ActivityList from '../dashboard/ActivityList';
 import { observer } from 'mobx-react-lite';
 import ActivityStore from '../../../app/stores/activityStore';
-import { LoadingComponent } from '../../../app/layout/LoadingComponent';
+import  LoadingComponent from '../../../app/layout/LoadingComponent';
 
 const ActivityDashboard: React.FC = () => {
     

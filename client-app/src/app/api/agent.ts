@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { IActivity } from "../models/activity";
+import { Activity } from "../models/activity";
 import { history } from "../..";
 import { toast } from "react-toastify";
 
@@ -26,46 +26,41 @@ axios.interceptors.response.use(undefined, error => {
   }
 });
 
-const responseBody = (response: AxiosResponse) => response.data;
+const responseBody  = <T> (response: AxiosResponse<T>) => response.data;
 
-const sleep = (ms: number) => (response: AxiosResponse) =>
-  new Promise<AxiosResponse>(resolve =>
-    setTimeout(() => resolve(response), ms)
-  );
+const sleep = (delay: number) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, delay)
+  })
+}
+
+axios.interceptors.response.use(async response => {
+  try {
+    await sleep(1000);
+    return response;
+  } catch (error) {
+    console.log(error);
+    return await Promise.reject(error);
+  }
+})
 
 const requests = {
-  get: (url: string) =>
-    axios
-      .get(url)
-      .then(sleep(1000))
-      .then(responseBody),
-  post: (url: string, body: {}) =>
-    axios
-      .post(url, body)
-      .then(sleep(1000))
-      .then(responseBody),
-  put: (url: string, body: {}) =>
-    axios
-      .put(url, body)
-      .then(sleep(1000))
-      .then(responseBody),
-  del: (url: string) =>
-    axios
-      .delete(url)
-      .then(sleep(1000))
-      .then(responseBody)
+  get: <T> (url: string) => axios.get<T>(url).then(responseBody),
+  post: <T> (url: string, body: {}) => axios.post<T>(url, body).then(responseBody),
+  put: <T> (url: string, body: {}) => axios.put<T>(url, body).then(responseBody),
+  del: <T> (url: string) => axios.delete<T>(url).then(responseBody)
 };
 
 const activitiesController = "/activities";
 
 const Activities = {
-  list: (): Promise<IActivity[]> => requests.get(activitiesController),
-  details: (id: string) => requests.get(`${activitiesController}/${id}`),
-  create: (activity: IActivity) =>
-    requests.post(activitiesController, activity),
-  update: (activity: IActivity) =>
-    requests.put(`${activitiesController}/${activity.id}`, activity),
-  delete: (id: string) => requests.del(`${activitiesController}/${id}`)
+  list: () => requests.get<Activity[]>(activitiesController),
+  details: (id: string) => requests.get<Activity>(`${activitiesController}/${id}`),
+  create: (activity: Activity) =>
+    requests.post<Activity>(activitiesController, activity),
+  update: (activity: Activity) =>
+    requests.put<Activity>(`${activitiesController}/${activity.id}`, activity),
+  delete: (id: string) => requests.del<Activity>(`${activitiesController}/${id}`)
 };
 
 export default { Activities };

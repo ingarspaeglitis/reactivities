@@ -1,13 +1,13 @@
 import { observable, action, computed, configure, runInAction } from "mobx";
 import { createContext, SyntheticEvent } from "react";
-import { IActivity } from "../models/activity";
+import { Activity } from "../models/activity";
 import agent from "../api/agent";
 
 configure({ enforceActions: "always" });
 
 class ActivityStore {
   @observable activityRegistry = new Map();
-  @observable activity: IActivity | null = null;
+  @observable activity: Activity | null = null;
   @observable loadingInitial = false;
   @observable submitting = false;
   @observable target = "";
@@ -18,7 +18,7 @@ class ActivityStore {
     );
   }
 
-  groupActivitiesByDate(activities: IActivity[]) {
+  groupActivitiesByDate(activities: Activity[]) {
     const sortedActivities = activities.sort(
       (a, b) => Date.parse(a.date) - Date.parse(b.date)
     );
@@ -30,7 +30,7 @@ class ActivityStore {
           : [activity];
 
         return activities;
-      }, {} as { [key: string]: IActivity[] })
+      }, {} as { [key: string]: Activity[] })
     );
   }
 
@@ -84,7 +84,7 @@ class ActivityStore {
     return this.activityRegistry.get(id);
   };
 
-  @action createActivity = async (activity: IActivity) => {
+  @action createActivity = async (activity: Activity) => {
     this.submitting = true;
     try {
       await agent.Activities.create(activity);
@@ -100,7 +100,7 @@ class ActivityStore {
     }
   };
 
-  @action editActivity = async (activity: IActivity) => {
+  @action editActivity = async (activity: Activity) => {
     this.submitting = true;
     try {
       await agent.Activities.update(activity);
