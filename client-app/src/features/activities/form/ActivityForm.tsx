@@ -11,6 +11,9 @@ interface DetailParams {
   id: string;
 }
 
+
+/*
+
 const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({
   match,
   history
@@ -71,7 +74,7 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({
       );
     }
   };
-  */
+  
 
   const handleFinalFormSubmit = (values: any) => {
     console.log(values);
@@ -93,5 +96,16 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({
     </Grid>
   );
 };
+*/
 
+const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({
+  match,
+  history
+}) => {
+
+  return (
+    <></>
+  );
+}
 export default observer(ActivityForm);
+
