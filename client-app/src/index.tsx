@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "semantic-ui-css/semantic.min.css";
 import 'react-calendar/dist/Calendar.css';
+import 'react-datepicker/dist/react-datepicker.css';
 import { Router } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import "react-toastify/dist/ReactToastify.min.css";

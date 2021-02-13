@@ -1,8 +1,6 @@
-﻿using System;
-using System.Net;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
-using Application.Errors;
+using Application.Core;
 using AutoMapper;
 using Domain;
 using FluentValidation;
@@ -13,41 +11,21 @@ namespace Application.Activities
 {
     public class Edit
     {
-        public class Command : IRequest
-        {
-            /*
-            public Guid Id { get; set; }
-
-            public string Title { get; set; }
-
-            public string Description { get; set; }
-
-            public string Category { get; set; }
-
-            public DateTime? Date { get; set; }
-
-            public string City { get; set; }
-
-            public string Venue { get; set; }
-            */
+        public class Command : IRequest<Result<Unit>>
+        {           
             public Activity Activity { get; set; }
         }
+       
 
         public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
-                RuleFor(x => x.Activity.Title).NotEmpty();
-                RuleFor(x => x.Activity.Description).NotEmpty();
-                RuleFor(x => x.Activity.Category).NotEmpty();
-                RuleFor(x => x.Activity.Date).NotEmpty();
-                RuleFor(x => x.Activity.City).NotEmpty();
-                RuleFor(x => x.Activity.Venue).NotEmpty();
-
+                RuleFor(x => x.Activity).SetValidator(new ActivityValidator());
             }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Command, Result<Unit>>
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
@@ -58,23 +36,18 @@ namespace Application.Activities
                 _mapper = mapper;
             }
 
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
                 var activity = await _context.Activities.FindAsync(request.Activity.Id);
-                if (activity == null)
-                {
-                    throw new RestException(HttpStatusCode.NotFound, new { activity = "Not found" });
-                }               
+                if (activity == null) return null;
 
                 _mapper.Map(request.Activity, activity);
 
-                var success = await _context.SaveChangesAsync(cancellationToken) > 0;
-                if (success)
-                {
-                    return Unit.Value;
-                }
+                var result = await _context.SaveChangesAsync() > 0;
 
-                throw new Exception("Problem saving changes");
+                if (!result) return Result<Unit>.Failure("Failed to update activity");
+
+                return Result<Unit>.Success(Unit.Value);
             }
         }
     }

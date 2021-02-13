@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { Activity } from "../models/activity";
+import { Activity} from "../models/activity";
 import { history } from "../..";
 import { toast } from "react-toastify";
 
@@ -55,12 +55,10 @@ const activitiesController = "/activities";
 
 const Activities = {
   list: () => requests.get<Activity[]>(activitiesController),
-  details: (id: string) => requests.get<Activity>(`${activitiesController}/${id}`),
-  create: (activity: Activity) =>
-    requests.post<Activity>(activitiesController, activity),
-  update: (activity: Activity) =>
-    requests.put<Activity>(`${activitiesController}/${activity.id}`, activity),
-  delete: (id: string) => requests.del<Activity>(`${activitiesController}/${id}`)
+  details: (id: string) => requests.get<Activity>(`${activitiesController}/${id}`), 
+  delete: (id: string) => requests.del<Activity>(`${activitiesController}/${id}`),
+  create: (activity: Activity) => requests.post<void>('/activities', activity),
+  update: (activity: Activity) => requests.put<void>(`/activities/${activity.id}`, activity),
 };
 
 export default { Activities };
