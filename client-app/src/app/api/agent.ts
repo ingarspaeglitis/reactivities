@@ -3,7 +3,7 @@ import { IActivity } from "../models/activity";
 import { history } from "../..";
 import { toast } from "react-toastify";
 
-axios.defaults.baseURL = "https://localhost:44385/api";
+axios.defaults.baseURL = "http://localhost:5000/api";
 
 axios.interceptors.response.use(undefined, error => {
   if (error.message === "Network Error" && !error.response) {
